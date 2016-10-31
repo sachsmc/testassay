@@ -1,0 +1,141 @@
+---
+title: "Validation of Growth Inhibition Assay using `testassay`"
+author: "Michael P Fay, Michael C Sachs, and Kazutoyo Miura"
+date: "`r format(Sys.Date(), '%Y %b %d')`"
+output: 
+    rmarkdown::html_vignette:
+        fig_width: 6
+        fig_height: 3.708
+bibliography: refs.bib
+vignette: >
+  %\VignetteIndexEntry{Validation of Growth Inhibition Assay}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+## Introduction
+
+The growth inhibition assay (GIA) is a functional assay that measures how antibodies (immunoglobulin G, IgG) in a blood sample inhibits the growth (and/or invasion) of certain malaria parasites. It is a functional assay in the sense that it is designed to measure the function of a sample, rather than the amount of a specifc analyte. The growth inhibition assay is described in detail in [@Malk:2005]. Briefy, the purified IgG from the test sample is mixed with malaria-infected red blood cells (RBCs) in a well of a 96 well plate. A negative control is a well with infected RBCs without test IgG on the same plate.
+
+The amount of parasite growth in either of those wells is measured by a biochemical assay specific for parasite lactate dehydrogenase using optical density wavelength of 650 (OD650). Specifically, the GIA from those two wells after adjusting for the OD650 from normal RBCs is
+
+$$
+GIA = 100 \left( 1 - \frac{OD_{650} \mbox{ of infected RBCs with test IgG } - OD_{650}  \mbox{ of normal RBCs}  }{OD_{650} \mbox{ of infected RBCs without any IgG } - OD_{650}  \mbox{ of normal RBCs} }  \right).
+$$
+
+Following [@Cumm:2010] we want to focus our validation process on the intended purposes of the GIA. One main purpose for the assay is to determine whether a given sample has any growth inhibition, and if so, how much. So the general purpose standard deviation interval should be useful in showing the middle 68.27% probable range of any sample. So the effective standard deviation of $Y$ will be a useful statistic.
+
+```{r import, include = FALSE}
+library(ggplot2)
+library(testassay)
+d <- gia
+tab<-table(d$sample,d$assay)
+rowNames<-dimnames(tab)[[1]]
+n.ones<-function(x){
+    length(x[x==1])
+}
+nOnes<-apply(tab,1,n.ones)
+sample4<-names(nOnes[nOnes==4])
+td7samp<- sample4[grep("3D7",sample4)]
+fvosamp<- sample4[grep("FVO",sample4)]
+
+## check that each sample is repeated on 4 assays
+J<- d$sample %in% td7samp
+tab3d7<-table(d$sample[J],d$assay[J])
+
+## now fvo
+J<- d$sample %in% fvosamp
+tabfvo<-table(d$sample[J],d$assay[J])
+
+```
+
+## Analysis
+
+For this demonstration, we use GIA replicate measurements on samples, where the GIA is based on two different strains of the _Plasmodium falciparum_ parasite, 3D7 and FVO.  Each sample is measured 4 times on 4 different assays. There are `r length(td7samp)` samples measured using the 3D7 strain,  and in each of the 4 assays each of the `r length(td7samp)` samples is measured once. Similarly,  there are `r length(fvosamp)` samples measured using the FVO strain, and in each of 4 different assays each of the `r length(fvosamp)` samples is measured once. There is statistical dependence due to the samples being all measured on the same  assay, so in a proper qualifying procedure each replicate would be measured on a different assay. For the purposes of illustration assume that each replicate is measured on a different assay.
+
+The example data are included with the package in the object called `gia`. This contains the raw elisa and gia values, for each replicate along with the sample-level means and variances. 
+
+```{r ex}
+summary(gia)
+```
+
+In the following figure we plot the mean of the 4 replicates for each sample by its 4 GIA measurements. The constant standard deviation model on the GIA appears reasonable except for very large values of mean GIA (above about 80% the variance looks smaller). Thus, we consider only the range with mean GIA $<80\%$. For these examples, we use the $m\!:\!n\!:\!90\%$ procedures, but the $m\!:\!n\!:\!80\%$ ones could have also been used.
+
+```{r pl1, echo = FALSE, message = FALSE}
+ggplot(d, aes(x = gia, y = meanAAgia, color = parasite))  + 
+  geom_abline(slope = 1, intercept = 0, color = "gray", size = 1.5) + geom_point() + 
+  scale_x_continuous("GIA", limits = c(-5, 100), breaks = seq(0, 100, by = 20)) + 
+  scale_y_continuous("mean GIA (per sample)", limits = c(-5, 100), breaks = seq(0, 100, by = 20)) + theme_bw() +
+  theme(legend.position = c(.85, .2))
+
+```
+
+We start with the 3D7 GIA assays. The range with mean GIA $<80\%$ leaves us with $m=4$ levels for testing. We run a $4\!:\!4\!:\!90\%$ procedure with a constant normal variance model. Using the `testassay` function from the synonymous package, we pass the parameters $m$, $n$, and $q$ as arguments. We also must specify the model type as either "normal", "lognormal", or "gamma", and whether the variance is constant or the CV is constant. 
+
+```{r giatest1}
+treD7.test <- testassay(x = gia, 
+                        m = sample, n = assay, q = .9, 
+                        model = "normal", constant = "variance", 
+                        data = subset(gia, parasite == "3D7" & meanAAgia < 80))
+
+treD7.test
+```
+
+
+so we calculate confidence intervals for $\sigma$ at the one-sided $1 - (.10)^{1/4}$ = `r 1-treD7.test$alpha` level. These are given as `U.sd` in the table printed out by testassay. 
+
+Although, `r 1-treD7.test$alpha` seems like a strange level for the individual upper limits, it allows us to take the maximum as a 90% limit, so that $\bar{\sigma}(.90)$ = `r treD7.test$Umax`. Although the effective standard deviation was calculated without using the values with mean GIA $>80\%$, since the variance of those values appears less, we can practically extend the range of the precision up to $100\%$.
+
+We can use the predict method to report observed assay values as confidence intervals with the effective standard deviation. We simply pass a vector of observations to the `predict` function on the assaytest object. If newdata is not given, it will report the intervals for the values used in the validation procedure.  
+
+```{r giapredict}
+obsD7 <- rnorm(5, mean = 60, sd = 28)
+predict(treD7.test, newdata = obsD7)
+```
+
+Now we run the procedure for the FVO samples. 
+
+
+```{r giatest2}
+FVO.test <- testassay(x = gia, 
+                        m = sample, n = assay, q = .9, 
+                        model = "normal", constant = "variance", 
+                        data = subset(gia, parasite == "FVO" & meanAAgia < 80))
+
+FVO.test
+
+predict(FVO.test)
+```
+
+A plot of the observed values with effective standard deviation intervals:
+```{r predplot}
+predat <- bind_cols(subset(gia, parasite == "FVO" & meanAAgia < 80), predict(FVO.test))
+
+ggplot(predat, 
+       aes(x = assay, y = obs, ymin = lower, ymax = upper)) + 
+  geom_pointrange() + facet_wrap(~ sample) + ylab("GIA")
+```
+
+We can also run validation procedures assuming a lognormal model, and/or constant coefficient of variation (CV), which is the standard deviation divided by the mean. A constant coefficient of variation model is appropriate when the standard deviation increases as the assay value increases. This is not the case here, but we run the model for illustration. The constant cv models give upper limits of confidence intervals for the CV instead of the SD. The effective standard deviation intervals differ depending on the model.
+
+```{r giacv}
+newobs <- c(25, 40, 65)
+predict(treD7.test, newobs)
+
+cvn <- testassay(x = gia, 
+          m = sample, n = assay, q = .9, 
+          model = "normal", constant = "cv", 
+          data = subset(gia, parasite == "3D7" & meanAAgia < 80))
+
+predict(cvn, newobs)
+
+cvln <- testassay(x = gia, 
+          m = sample, n = assay, q = .9, 
+          model = "lognormal", constant = "cv", 
+          data = subset(gia, parasite == "3D7" & meanAAgia < 80))
+
+predict(cvln, newobs)
+```
+
+
+## References
