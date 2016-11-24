@@ -28,6 +28,7 @@ Following [@Cumm:2010] we want to focus our validation process on the intended p
 ```{r import, include = FALSE}
 library(ggplot2)
 library(testassay)
+library(dplyr)
 d <- gia
 tab<-table(d$sample,d$assay)
 rowNames<-dimnames(tab)[[1]]
@@ -86,10 +87,10 @@ so we calculate confidence intervals for $\sigma$ at the one-sided $1 - (.10)^{1
 
 Although, `r 1-treD7.test$alpha` seems like a strange level for the individual upper limits, it allows us to take the maximum as a 90% limit, so that $\bar{\sigma}(.90)$ = `r treD7.test$Umax`. Although the effective standard deviation was calculated without using the values with mean GIA $>80\%$, since the variance of those values appears less, we can practically extend the range of the precision up to $100\%$.
 
-We can use the predict method to report observed assay values as confidence intervals with the effective standard deviation. We simply pass a vector of observations to the `predict` function on the assaytest object. If newdata is not given, it will report the intervals for the values used in the validation procedure.  
+We can use the predict method to report observed assay values as confidence intervals with the effective standard deviation. We simply pass a vector of observations to the `predict` function on the assaytest object. If newdata is not given, it will report the intervals for the values used in the validation procedure. Be aware that the predict procedure is not aware of any upper or lower limits to the assay, so interpret the results with care. For instance, the GIA assay has an upper limit of 100, but the software does not restrict the confidence interval upper limits so they could potentially be above 100. 
 
 ```{r giapredict}
-obsD7 <- rnorm(5, mean = 60, sd = 28)
+obsD7 <- rnorm(5, mean = 50, sd = 18)
 predict(treD7.test, newdata = obsD7)
 ```
 
