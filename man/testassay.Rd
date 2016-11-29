@@ -63,7 +63,8 @@ for the expected response from subsequent observed values from the assay.
 \examples{
 # reproduce Table 3 of Fay, Sachs and Miura
 I<- gia$parasite=="3D7" & gia$meanAAgia<80
-treD7.test<-testassay(x=gia, m=sample, n=assay, q=.9, data=subset(gia, parasite=="3D7" & meanAAgia<80))
+treD7.test<-testassay(x=gia, m=sample, n=assay, q=.9,
+  data=subset(gia, parasite=="3D7" & meanAAgia<80))
 treD7.test
 # get estimated effective standard deviation intervals (68.27 percent CIs)
 # for observed values 21.4 and 65.9
