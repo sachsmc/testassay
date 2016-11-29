@@ -1,3 +1,5 @@
+[![Travis-CI Build Status](https://travis-ci.org/sachsmc/testassay.svg?branch=master)](https://travis-ci.org/sachsmc/testassay)
+
 # testassay
 
 An R package to facilitate assay validation in a hypothesis testing framework. This is a companion to the following paper, currently under review:
