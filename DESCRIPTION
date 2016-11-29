@@ -2,7 +2,7 @@ Package: testassay
 Type: Package
 Title: A Hypothesis Testing Framework for Validating an Assay for Precision
 Version: 0.1.0
-Author: Michael C sachs and Michael P Fay
+Author: Michael C Sachs and Michael P Fay
 Maintainer: Michael C Sachs <sachsmc@gmail.com>
 Description: A common way of validating a biological assay for is through a
     procedure, where m levels of an analyte are measured with n replicates at each
@@ -17,7 +17,7 @@ Description: A common way of validating a biological assay for is through a
     assay output of y, the method gives an ``effective standard deviation interval''
     of log(y) plus or minus r, which is a 68% confidence interval on log(mu), where
     mu is the expected value of the assay output for that sample. Further, the m:n:q
-    procedure can be straightfowardly applied to constant standard deviation assays.
+    procedure can be straightforwardly applied to constant standard deviation assays.
     We illustrate these tools by applying them to a growth inhibition assay.
 License: MIT + file LICENSE
 LazyData: TRUE
