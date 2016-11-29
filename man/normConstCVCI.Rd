@@ -2,20 +2,37 @@
 % Please edit documentation in R/testassay.R
 \name{normConstCVCI}
 \alias{normConstCVCI}
-\title{Normal constant CV model}
+\title{Log-centered confidence intervals from a Normal constant coeffficient of variation model}
 \usage{
-normConstCVCI(y, tau, conf.level = 0.6827, eps = .Machine$double.eps^0.25)
+normConstCVCI(y, theta, conf.level = 0.6827, eps = .Machine$double.eps^0.25)
 }
 \arguments{
-\item{y}{Observed value}
+\item{y}{vector of observed values, should be positive}
 
-\item{tau}{Upper limit of CI for the CV}
+\item{theta}{coefficient of variation (assumed known)}
 
 \item{conf.level}{Confidence level}
 
-\item{eps}{Limit}
+\item{eps}{a small number used in the algorithm (look at code before changing)}
+}
+\value{
+A list with the following components
+\itemize{
+ \item{obs}{ y }
+ \item{lower}{ lower confidence limit on mu=E(Y)}
+ \item{upper}{ upper confidence limit on mu=E(Y)}
+}
 }
 \description{
-Normal constant CV model
+Assume Y is normal with mean mu>0 and coefficient of variation theta, then Y/mu ~ N(1, theta^2).
+Get log-centered confidence intervals (when possible), meaning intervals such that log(y) +/- r(theta), where
+r(theta) is a constant function of theta.
+}
+\examples{
+# defaults to 68.27 percent confidence level, same level as Normal plus or minus 1 std dev.
+normConstCVCI(3.4,.6)
+# symmetric on log scale
+log(normConstCVCI(3.4,.6))
+
 }
 

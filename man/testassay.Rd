@@ -2,9 +2,9 @@
 % Please edit documentation in R/testassay.R
 \name{testassay}
 \alias{testassay}
-\title{Hypothesis testing procedure for assay validation}
+\title{Hypothesis testing procedure for assay validation for precision}
 \usage{
-testassay(x, m, n, q = 0.9, model = "normal", constant = "variance",
+testassay(x, m, n, q = 0.9, model = "normal", constant = "SD",
   data = NULL)
 }
 \arguments{
@@ -19,20 +19,15 @@ testassay(x, m, n, q = 0.9, model = "normal", constant = "variance",
 \item{model}{String specifying the distribution for the assay values. Valid
 values are "normal" or "lognormal"}
 
-\item{constant}{String specifying whether the variance is assumed to be
-constant over the levels ("variance") or the coefficient of variation
-("CV").}
+\item{constant}{String specifying whether the standard deviation is assumed to be
+constant over the levels ("SD") or the coefficient of variation
+is assumed constant over the levels ("CV"). The values "sd", "var", or "variance" may be used for "SD", and "cv" may be used
+ for "CV".}
 
 \item{data}{Data frame or environment in which to look for x}
 }
 \value{
 An object of class "assaytest", which is a list of components including a data frame of the relevant statistics calculated on x. Print, summary, predict, and plot methods are available.
-}
-\description{
-Specify the assay results, procedure parameters, and the model assumptions,
-and this function calculates the relevant statistics
-}
-\details{
 The list has the following components
 \itemize{
  \item{sumtab}{Table summarizing the experiment, includes mean values, SD or CV estimates, and upper confidence limits on those. }
@@ -41,9 +36,43 @@ The list has the following components
  \item{m}{The number of levels}
  \item{q}{The confidence level}
  \item{model}{The assumed model}
- \item{constant}{The parameter assumed to be constant (either SD or CV)}
+ \item{constant}{The parameter assumed to be constant (either 'SD' or 'CV').  }
  \item{alpha}{The alpha level, calculated as (1 - q)^(1 / m)}
  \item{x}{The data vector supplied by the user}
 }
+}
+\description{
+Does an m:n:q procedure for assay validation for precision.
+Returns an object of class 'assaytest'. There is are \code{\link[=predict.assaytest]{predict}}
+and \code{\link[=print.assaytest]{print}} methods for that class.
+}
+\details{
+The m:n:q procedure uses m different samples that have different levels of the true value
+with n replicates for each sample. The output is a 100q percent upper limit of the bound on the
+precision parameter when the true values within the range of values for the m samples all follow either a
+a constant coefficient of variation model or a  constant
+standard deviation model (same as a constant variance model) (see \code{constant} argument).
+
+For example, if the 4:4:90 percent procedure using a normal model with a constant variance model
+returns a bound on the standard deviation  (the Umax element of the assaytest class) of 7.9
+then under the assumptions we have 90 percent confidence that the true SD is less than 7.9.
+
+The \code{\link[=predict.assaytest]{predict}} method gives effective standard deviation intervals (i.e., 68.27 pct CIs)
+for the expected response from subsequent observed values from the assay.
+}
+\examples{
+# reproduce Table 3 of Fay, Sachs and Miura
+I<- gia$parasite=="3D7" & gia$meanAAgia<80
+treD7.test<-testassay(x=gia, m=sample, n=assay, q=.9, data=subset(gia, parasite=="3D7" & meanAAgia<80))
+treD7.test
+# get estimated effective standard deviation intervals (68.27 percent CIs)
+# for observed values 21.4 and 65.9
+# using results from testassay
+predict(treD7.test,c(21.4,65.9))
+
+}
+\references{
+Fay, MP, Sachs, MC, and Miura, K (2016). A Hypothesis Testing Framework for Validating and Assay for Precision
+(unpublished manuscript).
 }
 

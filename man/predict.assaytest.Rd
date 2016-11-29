@@ -9,7 +9,7 @@
 \arguments{
 \item{object}{An object of class "assaytest"}
 
-\item{newdata}{A vector of observed values}
+\item{newdata}{A vector of observed values. If missing, uses object$x.}
 
 \item{...}{additional arguments}
 }
@@ -19,6 +19,20 @@ A data frame with the observed values, lower, and upper confidence
 }
 \description{
 Computes effective standard deviation intervals for observed assay results.
-These intervals have greater than 68.27% coverage.
+These intervals have at least 68.27 percent coverage.
+}
+\details{
+Takes the \code{Umax} element from the \code{assaytest} object and treats it as the known precision
+parameter. For the constant SD model, the effective standard deviation interval for observed data
+value y is (y-Umax, y+Umax). For the constant CV models the effective SD interval uses either
+\code{\link{normConstCVCI}} (for the "normal" model) or  \code{\link{lognormConstCVCI}} (for the "lognormal" model).
+
+Although \code{Umax} is an upper bound (not an estimate) of the precision parameter, simulations have shown
+that treating   \code{Umax} as the true precision parameter
+gives effective SD intervals with coverage of at least 68.27 percent (see Fay, Sachs, and Miura, 2016).
+}
+\references{
+Fay, MP, Sachs, MC, and Miura, K (2016). A Hypothesis Testing Framework for Validating and Assay for Precision
+(unpublished manuscript).
 }
 

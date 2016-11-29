@@ -4,16 +4,40 @@
 \alias{lognormConstCVCI}
 \title{log-normal constant CV model}
 \usage{
-lognormConstCVCI(y, tau, conf.level = 0.6827)
+lognormConstCVCI(y, theta, conf.level = 0.6827)
 }
 \arguments{
 \item{y}{Observed value}
 
-\item{tau}{Upper limit of CI for the CV}
+\item{theta}{coefficient of variation (assumed known)}
 
 \item{conf.level}{Confidence level}
 }
+\value{
+A list with the following components
+\itemize{
+ \item{obs}{ y }
+ \item{lower}{ lower confidence limit on mu=E(Y)}
+ \item{upper}{ upper confidence limit on mu=E(Y)}
+}
+}
 \description{
-log-normal constant CV model
+This function gets confidence intervals on mu=E(Y) assuming Y is lognormal and the coefficient of variation is known.
+}
+\details{
+Let Y be lognormal, so that log(Y) is normal with mean xi and variance eta.
+Then E(Y) =mu = exp(xi+eta/2) and
+Var(Y)=sigma^2 = mu^2 (exp(eta)-1),
+so that the coefficient of variation is sigma/mu = sqrt( exp(eta)-1).
+We want to get log-centered confidence intervals on mu, meaning intervals such that
+log(y) +/- r(theta), where
+r(theta) is a constant function of theta.
+}
+\examples{
+# defaults to 68.27 percent confidence level, same level as Normal plus or minus 1 std dev.
+lognormConstCVCI(3.4,.6)
+# compare to normal constant CV model result
+normConstCVCI(3.4,.6)
+
 }
 

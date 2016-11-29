@@ -2,6 +2,8 @@
 
 S3method(predict,assaytest)
 S3method(print,assaytest)
+export(lognormConstCVCI)
+export(normConstCVCI)
 export(testassay)
 importFrom(stats,pnorm)
 importFrom(stats,qchisq)
