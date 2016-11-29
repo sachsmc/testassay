@@ -364,7 +364,7 @@ lognormConstCVCI<- function(y, theta, conf.level=.6827){
 #' estimate of the "true" gia level for that sample. \code{varAAgia} is the sample level
 #' variance.
 #'
-#' @format A data frame with six variables: \code{parasite}, \code{assay},
+#' @format A data frame with variables: \code{parasite}, \code{assay},
 #'    \code{elisa}, \code{gia}, \code{sample}, \code{meanAAgia},
 #'   and \code{varAAgia}
 #' @aliases gia
