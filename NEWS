@@ -1,6 +1,14 @@
 NEWS
 ---------
 
+2016-11-28
+==========
+
+- Update man pages (through Roxygen2).
+- Change argument for CV to theta to match paper.
+- Change title in Description, add packages to suggests
+
+
 2016-10-31
 ==========
 
