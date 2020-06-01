@@ -14,4 +14,3 @@
 \description{
 Print the results of an assaytest
 }
-

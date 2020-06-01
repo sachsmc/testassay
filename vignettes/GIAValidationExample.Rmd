@@ -28,7 +28,7 @@ Following [@Cumm:2010] we want to focus our validation process on the intended p
 ```{r import, include = FALSE}
 library(ggplot2)
 library(testassay)
-library(dplyr)
+
 d <- gia
 tab<-table(d$sample,d$assay)
 rowNames<-dimnames(tab)[[1]]
@@ -110,7 +110,7 @@ predict(FVO.test)
 
 A plot of the observed values with effective standard deviation intervals:
 ```{r predplot}
-predat <- bind_cols(subset(gia, parasite == "FVO" & meanAAgia < 80), predict(FVO.test))
+predat <- cbind(subset(gia, parasite == "FVO" & meanAAgia < 80), predict(FVO.test))
 
 ggplot(predat, 
        aes(x = assay, y = obs, ymin = lower, ymax = upper)) + 

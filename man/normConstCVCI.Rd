@@ -35,4 +35,3 @@ normConstCVCI(3.4,.6)
 log(normConstCVCI(3.4,.6))
 
 }
-

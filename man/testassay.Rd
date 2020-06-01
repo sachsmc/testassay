@@ -4,8 +4,7 @@
 \alias{testassay}
 \title{Hypothesis testing procedure for assay validation for precision}
 \usage{
-testassay(x, m, n, q = 0.9, model = "normal", constant = "SD",
-  data = NULL)
+testassay(x, m, n, q = 0.9, model = "normal", constant = "SD", data = NULL)
 }
 \arguments{
 \item{x}{The vector of assay values}
@@ -76,4 +75,3 @@ predict(treD7.test,c(21.4,65.9))
 Fay, MP, Sachs, MC, and Miura, K (2016). A Hypothesis Testing Framework for Validating and Assay for Precision
 (unpublished manuscript).
 }
-

@@ -4,9 +4,11 @@
 \name{gia}
 \alias{gia}
 \title{Growth Inhibition Assay}
-\format{A data frame with variables: \code{parasite}, \code{assay},
+\format{
+A data frame with variables: \code{parasite}, \code{assay},
    \code{elisa}, \code{gia}, \code{sample}, \code{meanAAgia},
-  and \code{varAAgia}}
+  and \code{varAAgia}
+}
 \usage{
 gia
 }
@@ -21,4 +23,3 @@ estimate of the "true" gia level for that sample. \code{varAAgia} is the sample 
 variance.
 }
 \keyword{datasets}
-

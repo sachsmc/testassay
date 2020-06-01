@@ -35,4 +35,3 @@ gives effective SD intervals with coverage of at least 68.27 percent (see Fay, S
 Fay, MP, Sachs, MC, and Miura, K (2016). A Hypothesis Testing Framework for Validating and Assay for Precision
 (unpublished manuscript).
 }
-

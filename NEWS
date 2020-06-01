@@ -1,5 +1,13 @@
 NEWS
 ---------
+2020-06-01
+==========
+
+- Add reference and citation
+- Fix data and warning due to old version of tibble
+- Remove dplyr suggestion
+- Bump minor version
+
 
 2016-11-28
 ==========

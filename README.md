@@ -2,9 +2,9 @@
 
 # testassay
 
-An R package to facilitate assay validation in a hypothesis testing framework. This is a companion to the following paper, currently under review:
+An R package to facilitate assay validation in a hypothesis testing framework. This is a companion to the following paper:
 
-Michael P Fay, Michael C Sachs, and Kazutoyo Miura. *A Hypothesis Testing Framework for Validating an Assay for Precision*. (2016), Under Review.
+Michael P Fay, Michael C Sachs, and Kazutoyo Miura. *A Hypothesis Testing Framework for Validating an Assay for Precision*. (2018), Statistics in Medicine, 37(4):519-529.
 
 ### Abstract
 

@@ -1,0 +1,16 @@
+citHeader("To cite testassay in publications use:")
+
+citEntry(
+  entry    = "Article",
+  title    = "Measuring precision in bioassays: Rethinking assay validation",
+  author   = "Fay, M. P. and Sachs, M. C. and Miura, K.",
+  journal  = "Statistics in Medicine",
+  year     = "2018",
+  volume   = "37",
+  number   = "4",
+  pages    = "519--529",
+  url      = "https://www.ncbi.nlm.nih.gov/pmc/articles/PMC5771887/",
+  textVersion = paste(
+    "Fay, M. P., Sachs, M. C., & Miura, K. (2018). Measuring precision in bioassays: Rethinking assay validation. Statistics in medicine, 37(4), 519-529."
+  )
+)
